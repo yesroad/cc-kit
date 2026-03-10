@@ -6,10 +6,10 @@
       "env": {
         "JIRA_URL": "https://company.atlassian.net",
         "JIRA_USERNAME": "email@company.com",
-        "JIRA_API_TOKEN": "atlassian_token",
+        "JIRA_API_TOKEN": "YOUR_JIRA_API_TOKEN",
         "CONFLUENCE_URL": "https://company.atlassian.net/wiki",
         "CONFLUENCE_USERNAME": "email@company.com",
-        "CONFLUENCE_API_TOKEN": "atlassian_token"
+        "CONFLUENCE_API_TOKEN": "YOUR_CONFLUENCE_API_TOKEN"
       }
     },
     "Figma": {
@@ -17,7 +17,7 @@
       "args": [
         "-y",
         "figma-developer-mcp",
-        "--figma-api-key=Figma_Token",
+        "--figma-api-key=YOUR_FIGMA_API_KEY",
         "--stdio"
       ]
     }
