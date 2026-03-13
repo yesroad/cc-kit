@@ -1,185 +1,123 @@
-# 여백·간격·개행·반응형 가이드
+# 2026 웹/앱 디자인 스페이싱 시스템
 
 ---
 
-## 1. 컴포넌트 내부 Padding 기준
+## 1. 스페이싱 시스템의 핵심: 8px 그리드
 
-### 버튼
-```tsx
-// 텍스트 길이에 비례한 padding 사용
-// 한 단어 버튼 (구독하기, 시작하기 등)
-className="px-6 py-2.5"       // 기본 크기
-className="px-8 py-3"         // 중간 크기
-className="px-10 py-4"        // 대형 CTA
+2025~2026년 디자인 업계의 표준은 **8px 기반 간격 시스템**입니다. Apple Human Interface Guidelines와 Google Material Design 3 모두 공식 권장하며, 사실상 업계 표준으로 굳어진 상태입니다.
 
-// ❌ 한 단어 버튼에 px-12 이상은 과도함 → 여백이 텍스트보다 커 보임
-// ✅ 시각적으로 텍스트가 버튼 중앙에 자연스럽게 위치하면 OK
-```
+### 8px 그리드 적용 원칙
 
-### 카드
-```tsx
-className="p-4"    // 작은 카드 (대시보드 위젯, 뱃지형)
-className="p-5"    // 일반 카드
-className="p-6"    // 넓은 카드 (랜딩페이지, 피처 섹션)
-className="p-8"    // 히어로급 카드
+모든 여백, 패딩, 간격 값은 8의 배수를 사용합니다:
 
-// 내부 요소 간 gap
-className="flex flex-col gap-3"  // 콤팩트
-className="flex flex-col gap-4"  // 일반
-className="flex flex-col gap-6"  // 여유 있는 레이아웃
-```
+- **기본 값:** 4, 8, 16, 24, 32, 40, 48, 64, 96px
+- **장점:** 화면 해상도와 디바이스 픽셀 비율에 자연스럽게 정렬되며, 4px 반분을 활용해 미세 조정이 가능
+- **단점:** 10px 기반 시스템은 홀수 값(5px, 2.5px)이 생겨 픽셀 정밀도가 깨짐
 
-### 섹션
-```tsx
-// 섹션 간 수직 간격
-className="py-16"   // 컴팩트 (앱 화면, 대시보드)
-className="py-20"   // 일반 페이지
-className="py-24"   // 랜딩페이지 섹션
-className="py-32"   // 히어로 영역
+### 디자인 토큰으로의 진화
 
-// 같은 섹션 내 요소 간
-className="space-y-4"   // 관련 요소 (레이블+인풋)
-className="space-y-6"   // 섹션 내 블록
-className="space-y-12"  // 서브섹션 구분
-```
+스페이싱 값은 더 이상 개별 수치가 아니라 **디자인 토큰**으로 관리하는 것이 2026년 표준입니다:
+
+| 토큰 | 값   |
+| ---- | ---- |
+| XS   | 4px  |
+| S    | 8px  |
+| M    | 16px |
+| L    | 32px |
+| XL   | 64px |
+
+이를 통해 디자이너와 개발자가 동일한 언어로 소통하고, 디자인 시스템 전반에 걸쳐 임의 수치가 혼입되는 것을 방지합니다.
+
+### 4px 서브 그리드 활용
+
+밀도 높은 UI나 정밀 정렬이 필요한 경우 4px 서브 그리드를 병행합니다:
+
+- 레이아웃 전체 구조: 8px
+- 세부 컴포넌트 내부 또는 아이콘 주변 간격: 4px
 
 ---
 
-## 2. 요소 간 간격 규칙
+## 2. 여백 (Whitespace / Negative Space) 트렌드
 
-### 나란히 배치된 요소들
-```tsx
-// 같은 역할의 버튼/아이콘 묶음 → gap 동일하게
-<div className="flex items-center gap-2">
-  <Button size="icon">♡</Button>
-  <Button size="icon">⊕</Button>
-</div>
+2026년 트렌드의 핵심은 **'넉넉한 여백(Generous Whitespace)'**입니다. 단순히 빈 공간이 아니라 의도적으로 설계된 호흡 공간으로 인식되고 있습니다.
 
-// 가격+버튼처럼 정보 밀도 높은 영역
-// → 넘치거나 잘리지 않도록 flex-shrink, min-w 명시
-<div className="flex items-center gap-3 min-w-0">
-  <span className="font-bold whitespace-nowrap">₩25,600</span>
-  <span className="line-through text-muted flex-shrink-0">₩32,000</span>
-  <div className="flex gap-2 flex-shrink-0">
-    <Button size="icon">♡</Button>
-    <Button>+ 담기</Button>
-  </div>
-</div>
-```
+### 브레이크포인트별 권장 여백 값
 
-### 과도한 여백 방지
-```tsx
-// ❌ 버튼/배지 하나만 있는데 py-16 이상
-<section className="py-20">
-  <Button>구독하기</Button>  {/* 내용 없이 공간만 크면 허전 */}
-</section>
+**모바일**
 
-// ✅ 보조 텍스트나 설명 추가, 또는 padding 줄이기
-<section className="py-12">
-  <p className="text-muted-foreground mb-4">매주 화요일, 새로운 이야기를 전합니다</p>
-  <Button>구독하기</Button>
-</section>
-```
+| 영역           | 권장 여백 |
+| -------------- | --------- |
+| 사이드 패딩    | 16px      |
+| 섹션 상하 간격 | 32px      |
+| 카드 내부 패딩 | 16~24px   |
 
----
+**태블릿**
 
-## 3. 한국어 텍스트 개행 처리
+| 영역           | 권장 여백 |
+| -------------- | --------- |
+| 사이드 패딩    | 24px      |
+| 섹션 간격      | 40~56px   |
+| 카드 내부 패딩 | 24~32px   |
 
-한국어는 조사·어미가 짧아 줄 끝에 한두 글자만 남는 어색한 개행이 자주 발생합니다.
+**데스크톱**
 
-```tsx
-// ❌ 어색한 개행 — "니다." 혼자 두 번째 줄
-// "신제품 출시, 친환경 팁, 회원 전용 할인까지. 매주 화요일,
-//  자연이 담긴 이야기를 전합
-//  니다."
+| 영역               | 권장 여백 |
+| ------------------ | --------- |
+| 컨테이너 내부 패딩 | 24~32px   |
+| 섹션 간격          | 64~96px   |
 
-// ✅ 방법 1: break-keep (단어 단위 개행, 음절 중간 끊김 방지)
-className="break-keep"
+**울트라와이드**
 
-// ✅ 방법 2: max-width 조정으로 자연스러운 줄바꿈 유도
-className="max-w-[280px] break-keep"
+| 영역        | 권장 여백 |
+| ----------- | --------- |
+| 사이드 마진 | 48~80px   |
+| 섹션 간격   | 96~128px  |
 
-// ✅ 방법 3: 의미 단위로 <br /> 직접 삽입 (고정 레이아웃)
-<p>신제품 출시, 친환경 팁, 회원 전용 할인까지.<br />
-매주 화요일, 자연이 담긴 이야기를 전합니다.</p>
-```
+**모든 기기**
 
-**적용 기준**
+| 영역                | 권장 여백           |
+| ------------------- | ------------------- |
+| 그리드 거터(Gutter) | 24px (모바일: 16px) |
 
-| 위치 | 처리 방법 |
-|------|----------|
-| 히어로 헤드라인 | `break-keep` 필수 |
-| `text-center` 단락 | `break-keep` + `max-w` 조합 |
-| 본문/설명 텍스트 | `break-keep` 기본 적용 |
-| 버튼 레이블 | `whitespace-nowrap` |
-| 긴 고정 카피 | `<br />` 직접 삽입 |
+### 핵심 원칙
+
+**내부 ≤ 외부 여백의 법칙**
+
+- 컴포넌트 내부 패딩보다 컴포넌트 간 여백(마진)을 같거나 더 크게 유지
+- 게슈탈트 심리학의 근접성 법칙을 기반으로 함
+- 직관적으로 무엇이 하나의 그룹이고 무엇이 분리된 요소인지 전달
+
+**헤드라인 주변 여백 증가 트렌드**
+
+- 2026년에는 헤드라인 주변 여백을 기존 대비 20% 이상 증가
+- 인지 부하를 줄이고 집중도를 높임
 
 ---
 
-## 4. 반응형 브레이크포인트 활용 기준
+## 3. 접근성(WCAG) 관련 스페이싱 기준
 
-Tailwind 기본 브레이크포인트: `sm(640px)` · `md(768px)` · `lg(1024px)` · `xl(1280px)` · `2xl(1536px)`
+2025~2026년 트렌드에서 접근성은 선택이 아닌 필수입니다. WCAG 2.1 AA 레벨 기준:
 
-### 카드 그리드
-```tsx
-// 기본: 1열 → 태블릿: 2열 → 데스크탑: 3~4열
-className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+| 속성                         | 최소 기준                                |
+| ---------------------------- | ---------------------------------------- |
+| 줄 간격(line-height)         | 폰트 크기 × 1.5 이상                     |
+| 문단 간격(paragraph spacing) | 폰트 크기 × 2 이상                       |
+| 자간(letter-spacing)         | 폰트 크기 × 0.12 이상 (사용자 설정 허용) |
+| 단어 간격(word-spacing)      | 폰트 크기 × 0.16 이상 (사용자 설정 허용) |
+| 터치 타겟 최소 크기          | 44×44px (Apple), 48×48px (Material)      |
+| 텍스트 최소 크기             | 16px (웹)                                |
+| 색상 대비 (텍스트)           | 4.5:1 이상 (WCAG AA)                     |
 
-// 벤토 박스 (크기 혼합)
-className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3"
-```
-
-### 히어로 섹션
-```tsx
-// 모바일: 세로 스택 → 데스크탑: 2컬럼
-<section className="flex flex-col lg:flex-row items-center gap-8 py-20">
-  <div className="flex-1 text-center lg:text-left">
-    <h1 className="text-[clamp(2rem,6vw,5rem)] font-black break-keep">...</h1>
-  </div>
-  <div className="flex-1">이미지/비주얼</div>
-</section>
-```
-
-### 네비게이션
-```tsx
-// 모바일: 햄버거 메뉴 / 데스크탑: 풀 메뉴
-<nav>
-  <div className="hidden md:flex items-center gap-6">...</div>  {/* 데스크탑 메뉴 */}
-  <Button className="md:hidden" variant="ghost">☰</Button>     {/* 모바일 햄버거 */}
-</nav>
-```
-
-### 타이포그래피 스케일
-```tsx
-// clamp로 유체(fluid) 타이포그래피
-className="text-[clamp(2rem,5vw,4rem)]"   // 섹션 헤드라인
-className="text-[clamp(3rem,8vw,7rem)]"   // 히어로 대형 헤드라인
-className="text-[clamp(1rem,2vw,1.25rem)]"  // 본문 유동 크기
-
-// 단계별 고정 스케일 (심플한 방식)
-className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black"
-```
-
-### 간격 반응형 조정
-```tsx
-// 모바일에선 좁게, 데스크탑에선 넓게
-className="px-4 sm:px-6 lg:px-8"           // 컨테이너 측면 padding
-className="py-12 md:py-16 lg:py-24"        // 섹션 수직 padding
-className="gap-3 md:gap-4 lg:gap-6"        // 그리드/플렉스 gap
-```
+**핵심:** 기준을 강제하는 것이 아니라, 사용자가 해당 수치로 설정을 변경해도 레이아웃이 깨지지 않도록 유연하게 구조를 만드는 것입니다.
 
 ---
 
-## 5. 품질 체크리스트
+## 4. 주요 트렌드 요약
 
-구현 완료 후 출력 전 확인:
+2026년 웹/앱 디자인 스페이싱 트렌드를 한마디로 요약하면 **'의도된 넉넉함(Intentional Generosity)'**입니다:
 
-- [ ] 버튼 padding이 텍스트 대비 과도하거나 부족하지 않은가?
-- [ ] 나란히 배치된 요소들의 `gap`이 일관적인가?
-- [ ] 가격·버튼 등 정보 밀도 높은 영역에서 요소가 잘리거나 넘치지 않는가?
-- [ ] 한국어 텍스트에 `break-keep` 또는 `max-w`가 적용되었는가?
-- [ ] `text-center` 단락에서 마지막 줄에 단어 한두 개만 남지 않는가?
-- [ ] 버튼 레이블에 `whitespace-nowrap`이 적용되었는가?
-- [ ] 특정 영역만 공백이 과도하게 크지 않은가?
-- [ ] 모바일(375px) 기준에서 레이아웃이 깨지지 않는가?
-- [ ] 히어로 헤드라인에 `clamp()` 또는 반응형 텍스트 크기가 적용되었는가?
+- ✅ 공간을 채우는 것보다 의도적으로 비우는 설계
+- ✅ 임의 수치가 아닌 수학적 체계(8px 그리드, rem 스케일)를 통한 일관성 확보
+- ✅ 모든 결정이 접근성과 연결되는 구조
+
+**디자인 토큰**의 확산은 이 큰 흐름을 구체적으로 표현하는 방식입니다.
