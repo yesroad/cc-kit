@@ -93,3 +93,140 @@
 | 브루탈 레드   | `#FF2800` | 255, 40, 0    |
 | 브루탈 옐로우 | `#FFE500` | 255, 229, 0   |
 | 브루탈 블루   | `#0057FF` | 0, 87, 255    |
+
+---
+
+## 🌙 다크모드 구현 (Tailwind + CSS Variables)
+
+### 방법 1 — CSS 변수 + Tailwind `dark:` prefix (권장)
+
+```ts
+// tailwind.config.ts
+export default {
+  darkMode: 'class',  // HTML에 .dark 클래스 토글 방식
+  theme: {
+    extend: {
+      colors: {
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        card: 'hsl(var(--card))',
+        border: 'hsl(var(--border))',
+        muted: 'hsl(var(--muted))',
+        'muted-foreground': 'hsl(var(--muted-foreground))',
+        primary: 'hsl(var(--primary))',
+        'primary-foreground': 'hsl(var(--primary-foreground))',
+      }
+    }
+  }
+}
+```
+
+```css
+/* app/globals.css */
+:root {
+  --background: 250 247 242;      /* 크림 오프화이트 */
+  --foreground: 28 20 14;         /* 다크 브라운 */
+  --card: 255 255 255;
+  --border: 220 210 200;
+  --muted: 245 239 224;
+  --muted-foreground: 120 100 80;
+  --primary: 158 123 90;          /* 모카 무스 */
+  --primary-foreground: 255 255 255;
+}
+
+.dark {
+  --background: 10 14 26;         /* 딥 네이비 */
+  --foreground: 226 232 240;
+  --card: 26 34 53;
+  --border: 45 58 82;
+  --muted: 17 24 39;
+  --muted-foreground: 148 163 184;
+  --primary: 0 255 135;           /* 네온 그린 포인트 */
+  --primary-foreground: 10 14 26;
+}
+```
+
+```tsx
+// 다크모드 토글 버튼
+'use client'
+import { useEffect, useState } from 'react'
+
+export function DarkModeToggle() {
+  const [dark, setDark] = useState(false)
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', dark)
+  }, [dark])
+  return (
+    <button onClick={() => setDark(!dark)}
+      className="p-2 rounded-full transition-colors hover:bg-muted">
+      {dark ? '☀️' : '🌙'}
+    </button>
+  )
+}
+```
+
+### 방법 2 — next-themes 활용 (Next.js 권장)
+
+```bash
+npm install next-themes
+```
+
+```tsx
+// app/providers.tsx
+'use client'
+import { ThemeProvider } from 'next-themes'
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      {children}
+    </ThemeProvider>
+  )
+}
+
+// app/layout.tsx
+import { Providers } from './providers'
+export default function RootLayout({ children }) {
+  return (
+    <html lang="ko" suppressHydrationWarning>
+      <body><Providers>{children}</Providers></body>
+    </html>
+  )
+}
+```
+
+```tsx
+// 다크모드 토글 컴포넌트
+'use client'
+import { useTheme } from 'next-themes'
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
+  return (
+    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      className="p-2 rounded-full hover:bg-muted transition-colors">
+      {theme === 'dark' ? '☀️' : '🌙'}
+    </button>
+  )
+}
+```
+
+### Tailwind에서 다크모드 색상 적용
+
+```tsx
+// 컴포넌트에서 dark: prefix 사용
+<div className="bg-background text-foreground">
+  <div className="bg-card border border-border rounded-xl p-6">
+    <h2 className="text-foreground font-bold">제목</h2>
+    <p className="text-muted-foreground text-sm">설명 텍스트</p>
+    <button className="bg-primary text-primary-foreground px-4 py-2 rounded-lg
+      hover:opacity-90 transition-opacity">
+      버튼
+    </button>
+  </div>
+</div>
+
+// CSS 변수 방식을 쓰면 dark: prefix 없이 자동 전환됨
+// 스타일별 추천 다크모드 컬러:
+// 어스톤 라이트 → 다크 네이비 배경 + 크림 텍스트
+// 소프트 파스텔 → 딥 퍼플/네이비 배경 + 라이트 파스텔 포인트
+// 브루탈리즘 → 퓨어 블랙 배경 + 오프화이트 텍스트 (이미 다크 친화적)
+```

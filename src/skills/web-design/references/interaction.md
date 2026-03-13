@@ -178,6 +178,107 @@ VR 웹 경험               AR 제품 미리보기
 
 ---
 
+## 🛠️ 구현 코드 패턴
+
+### 기본 (항상 포함)
+
+```tsx
+// 버튼 hover/active 피드백
+className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+
+// 폼 에러 흔들림 (tailwind.config에 animate-shake 커스텀 정의 필요)
+className="animate-shake border-red-500"
+// tailwind.config.ts
+// keyframes: { shake: { '0%,100%': {transform:'translateX(0)'}, '25%': {transform:'translateX(-4px)'}, '75%': {transform:'translateX(4px)'} } }
+// animation: { shake: 'shake 0.3s ease-in-out' }
+```
+
+### 중간 (일반 페이지/컴포넌트)
+
+```tsx
+// 스켈레톤 UI (shadcn/ui Skeleton 활용)
+import { Skeleton } from "@/components/ui/skeleton"
+<div className="flex flex-col gap-3">
+  <Skeleton className="h-4 w-[250px]" />
+  <Skeleton className="h-4 w-[200px]" />
+</div>
+
+// 스크롤 reveal (Intersection Observer)
+'use client'
+import { useEffect, useRef, useState } from 'react'
+function RevealOnScroll({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setVisible(true)
+    }, { threshold: 0.1 })
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+  return (
+    <div ref={ref} className={`transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      {children}
+    </div>
+  )
+}
+
+// 좋아요 애니메이션
+const [liked, setLiked] = useState(false)
+<button onClick={() => setLiked(!liked)}
+  className={`transition-transform active:scale-125 ${liked ? 'text-red-500' : 'text-gray-400'}`}>
+  ♥
+</button>
+```
+
+### 고급 (랜딩페이지, 포트폴리오)
+
+```tsx
+// 패럴랙스 스크롤 (Framer Motion)
+import { useScroll, useTransform, motion } from 'framer-motion'
+function ParallaxSection() {
+  const { scrollY } = useScroll()
+  const y = useTransform(scrollY, [0, 500], [0, -150])
+  return (
+    <motion.div style={{ y }} className="relative">
+      {/* 배경 레이어 */}
+    </motion.div>
+  )
+}
+
+// 다이나믹 커서 (포트폴리오·에이전시 전용)
+'use client'
+import { useEffect, useState } from 'react'
+function DynamicCursor() {
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  useEffect(() => {
+    const move = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY })
+    window.addEventListener('mousemove', move)
+    return () => window.removeEventListener('mousemove', move)
+  }, [])
+  return (
+    <div className="fixed pointer-events-none z-50 w-4 h-4 rounded-full bg-white mix-blend-difference"
+      style={{ left: pos.x - 8, top: pos.y - 8, transition: 'left 0.05s, top 0.05s' }} />
+  )
+}
+
+// Bold Kinetic Typography (스크롤 연동 텍스트)
+import { useScroll, useTransform, motion } from 'framer-motion'
+function KineticHeadline() {
+  const { scrollYProgress } = useScroll()
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-30%'])
+  return (
+    <div className="overflow-hidden">
+      <motion.h1 style={{ x }} className="text-[clamp(4rem,12vw,10rem)] font-black whitespace-nowrap">
+        DESIGN · CREATE · BUILD ·&nbsp;
+      </motion.h1>
+    </div>
+  )
+}
+```
+
+---
+
 ## 📊 트렌드 중요도 요약
 
 | 트렌드               | 중요도 | 비고             |
