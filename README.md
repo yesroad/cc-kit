@@ -6,26 +6,32 @@ Claude Code 확장 플러그인 — rules, agents, skills, commands를 포함한
 
 ## 설치
 
-### 1. Claude Code에 플러그인 등록
+### 1. 마켓플레이스 등록
 
-`~/.claude/settings.json` (전역) 또는 프로젝트의 `.claude/settings.json`에 추가합니다:
+Claude Code에서 `yesroad` 마켓플레이스를 추가합니다:
 
-```json
-{
-  "plugins": [
-    {
-      "name": "claude_kit",
-      "source": "github:yesroad/claude_kit"
-    }
-  ]
-}
+```
+/plugin marketplace add github:yesroad/claude_kit
 ```
 
-### 2. 프로젝트 설정
+### 2. 플러그인 설치
 
-Claude Code에서 `/claude_kit:setup`을 실행합니다.
+```
+/plugin install claude_kit@yesroad
+```
+
+설치 후 `/claude_kit:` 접두사로 커맨드를 사용할 수 있습니다.
+
+### 3. 프로젝트 설정
+
+설정할 프로젝트에서 실행합니다:
+
+```
+/claude_kit:setup
+```
 
 기술 스택 인터뷰(6문항)를 진행한 후 프로젝트에 맞춤화된 `.claude/`와 CLAUDE.md를 자동 생성합니다.
+이후 커맨드는 `/start`, `/done`, `/commit` 등 네임스페이스 없이 사용할 수 있습니다.
 
 ---
 
