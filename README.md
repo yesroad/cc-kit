@@ -11,7 +11,7 @@ Claude Code 확장 플러그인 — rules, agents, skills, commands를 포함한
 Claude Code에서 `yesroad` 마켓플레이스를 추가합니다:
 
 ```
-/plugin marketplace add github:yesroad/claude_kit
+/plugin marketplace add yesroad/claude_kit
 ```
 
 ### 2. 플러그인 설치
