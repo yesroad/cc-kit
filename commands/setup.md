@@ -53,9 +53,34 @@ description: claude_kit을 현재 프로젝트에 설치합니다. 프로젝트 
 
 ---
 
+**Q6. MCP 서버** (복수 선택 가능, 없으면 그냥 엔터)
+
+| 번호 | 서버 | 용도 |
+|------|------|------|
+| 1 | Figma | 피그마 디자인 파일 읽기 (API 키 필요) |
+| 2 | Supabase | DB 쿼리, 마이그레이션, Edge Function (API 키 필요) |
+| 3 | Playwright | 브라우저 자동화, E2E 테스트 (설정 불필요) |
+| 4 | Atlassian | Jira·Confluence 연동 (API 키 필요) |
+| 5 | 없음 | |
+
+예시: "1 3" → Figma + Playwright 설치
+
+---
+
 ## 2단계: 파일 설치
 
-답변을 받은 후 아래 스크립트를 실행합니다:
+답변을 받은 후 아래 스크립트를 실행합니다.
+
+Q6 답변을 기반으로 스크립트 실행 전에 `SELECTED_MCP` 변수를 설정합니다:
+
+| Q6 선택 | SELECTED_MCP 값 |
+|---------|----------------|
+| 1 (Figma) | `Figma` |
+| 2 (Supabase) | `supabase` |
+| 3 (Playwright) | `playwright` |
+| 4 (Atlassian) | `Atlassian` |
+| 복수 선택 "1 3" | `Figma,playwright` |
+| 5 또는 엔터 | (빈 문자열, 설치 안 함) |
 
 ```bash
 #!/bin/bash
@@ -87,26 +112,39 @@ mkdir -p .claude/plugins
 [ -d "$PLUGIN_ROOT/scripts" ]      && cp -r "$PLUGIN_ROOT/scripts/"      .claude/scripts/
 [ -f "$PLUGIN_ROOT/plugins/notify.js" ] && cp "$PLUGIN_ROOT/plugins/notify.js" .claude/plugins/notify.js
 
-# .mcp.json: 없으면 복사, 있으면 없는 서버 항목만 머지
-if [ -f "$PLUGIN_ROOT/.mcp.json" ]; then
-  if [ ! -f ".mcp.json" ]; then
-    cp "$PLUGIN_ROOT/.mcp.json" .mcp.json
-    echo "📋 .mcp.json 템플릿 복사 완료 (API 키 설정 필요)"
-  else
-    MCP_TEMPLATE="$PLUGIN_ROOT/.mcp.json" python3 - <<'PYEOF'
+# .mcp.json: Q6 선택 서버만 추가 (없으면 새로 생성, 있으면 선택 항목만 머지)
+# SELECTED_MCP: Q6 답변 기반으로 Claude가 설정 — 쉼표 구분 서버 키 목록
+# 예) SELECTED_MCP="Figma,playwright" 또는 SELECTED_MCP="" (없음)
+# 서버 키 매핑: 1=Figma, 2=supabase, 3=playwright, 4=Atlassian
+if [ -n "$SELECTED_MCP" ] && [ -f "$PLUGIN_ROOT/.mcp.json" ]; then
+  MCP_TEMPLATE="$PLUGIN_ROOT/.mcp.json" MCP_SELECTED="$SELECTED_MCP" python3 - <<'PYEOF'
 import json, os
 
-with open(".mcp.json") as f:
-    existing = json.load(f)
+template_path = os.environ["MCP_TEMPLATE"]
+selected_keys = [k.strip() for k in os.environ.get("MCP_SELECTED", "").split(",") if k.strip()]
 
-with open(os.environ["MCP_TEMPLATE"]) as f:
+with open(template_path) as f:
     template = json.load(f)
 
-existing_servers = existing.setdefault("mcpServers", {})
 template_servers = template.get("mcpServers", {})
 
+# 선택된 서버만 필터
+selected_servers = {k: v for k, v in template_servers.items() if k in selected_keys}
+if not selected_servers:
+    print("📋 선택된 MCP 서버 없음 — .mcp.json 생성 안 함")
+    exit(0)
+
+# 기존 .mcp.json 로드 또는 빈 구조 생성
+if os.path.exists(".mcp.json"):
+    with open(".mcp.json") as f:
+        existing = json.load(f)
+else:
+    existing = {}
+
+existing_servers = existing.setdefault("mcpServers", {})
+
 added = []
-for name, config in template_servers.items():
+for name, config in selected_servers.items():
     if name not in existing_servers:
         existing_servers[name] = config
         added.append(name)
@@ -116,11 +154,10 @@ with open(".mcp.json", "w") as f:
     f.write("\n")
 
 if added:
-    print(f"📋 .mcp.json 머지 완료 — 추가된 서버: {', '.join(added)}")
+    print(f"📋 .mcp.json 완료 — 추가된 서버: {', '.join(added)}")
 else:
-    print("📋 .mcp.json 변경 없음 (모든 서버가 이미 존재)")
+    print("📋 .mcp.json 변경 없음 (선택 서버가 이미 존재)")
 PYEOF
-  fi
 fi
 
 [ "$PLUGIN_ROOT" = "/tmp/claude_kit_install" ] && rm -rf /tmp/claude_kit_install
