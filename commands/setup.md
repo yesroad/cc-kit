@@ -98,17 +98,14 @@ if [ ! -d "$PLUGIN_ROOT" ]; then
   PLUGIN_ROOT="/tmp/claude_kit_install"
 fi
 
-mkdir -p .claude/rules/core
-mkdir -p .claude/instructions/multi-agent
-mkdir -p .claude/instructions/validation
-mkdir -p .claude/instructions/workflow-patterns
-mkdir -p .claude/hooks
-mkdir -p .claude/scripts
+mkdir -p .claude
 
-[ -d "$PLUGIN_ROOT/rules" ]        && cp -r "$PLUGIN_ROOT/rules/"        .claude/rules/
-[ -d "$PLUGIN_ROOT/instructions" ] && cp -r "$PLUGIN_ROOT/instructions/" .claude/instructions/
-[ -f "$PLUGIN_ROOT/hooks/notify.sh" ] && cp "$PLUGIN_ROOT/hooks/notify.sh" .claude/hooks/notify.sh && chmod +x .claude/hooks/notify.sh
-[ -d "$PLUGIN_ROOT/scripts" ]      && cp -r "$PLUGIN_ROOT/scripts/"      .claude/scripts/
+for dir in rules instructions agents skills commands hooks scripts; do
+  [ -d "$PLUGIN_ROOT/$dir" ] && cp -r "$PLUGIN_ROOT/$dir/" ".claude/$dir/"
+done
+
+# hooks 실행 권한 부여
+[ -f ".claude/hooks/notify.sh" ] && chmod +x .claude/hooks/notify.sh
 
 # .mcp.json: Q6 선택 서버만 추가 (없으면 새로 생성, 있으면 선택 항목만 머지)
 # SELECTED_MCP: Q6 답변 기반으로 Claude가 설정 — 쉼표 구분 서버 키 목록
