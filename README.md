@@ -20,14 +20,12 @@ Claude Code에서 `yesroad` 마켓플레이스를 추가합니다:
 /plugin install claude_kit@yesroad
 ```
 
-설치 후 `/claude_kit:` 접두사로 커맨드를 사용할 수 있습니다.
-
 ### 3. 프로젝트 설정
 
 설정할 프로젝트에서 실행합니다:
 
 ```
-/claude_kit:setup
+/setup
 ```
 
 기술 스택 인터뷰(6문항)를 진행한 후 프로젝트에 맞춤화된 `.claude/`와 CLAUDE.md를 자동 생성합니다.
@@ -37,14 +35,14 @@ Claude Code에서 `yesroad` 마켓플레이스를 추가합니다:
 
 ## 인터뷰 항목
 
-| 질문 | 선택지 |
-|------|--------|
-| **Q1. 프레임워크** | Next.js / React / Vue / 기타 |
-| **Q2. 라우터** | App Router / Pages Router (Next.js만) |
-| **Q3. 스타일링** | TailwindCSS / Emotion / CSS Modules / 기타 |
-| **Q4. 서버 상태** | TanStack Query / SWR / 없음 |
-| **Q5. 전역 상태** | Jotai / Zustand / Redux Toolkit / 없음 |
-| **Q6. MCP 서버** | Figma / Supabase / Playwright / Atlassian / 없음 (복수 선택) |
+| 질문               | 선택지                                                       |
+| ------------------ | ------------------------------------------------------------ |
+| **Q1. 프레임워크** | Next.js / React / Vue / 기타                                 |
+| **Q2. 라우터**     | App Router / Pages Router (Next.js만)                        |
+| **Q3. 스타일링**   | TailwindCSS / Emotion / CSS Modules / 기타                   |
+| **Q4. 서버 상태**  | TanStack Query / SWR / 없음                                  |
+| **Q5. 전역 상태**  | Jotai / Zustand / Redux Toolkit / 없음                       |
+| **Q6. MCP 서버**   | Figma / Supabase / Playwright / Atlassian / 없음 (복수 선택) |
 
 ---
 
@@ -62,14 +60,14 @@ brew install gh && gh auth login
 
 ## 커맨드
 
-| 커맨드 | 설명 |
-|--------|------|
-| `/claude_kit:setup` | 기술 스택 인터뷰 → 맞춤형 `.claude/` + CLAUDE.md 생성 |
-| `/claude_kit:start` | 작업 시작 — 분석 → 계획 → 확인 |
-| `/claude_kit:done` | 작업 완료 — 검증 → 커밋 → PR |
-| `/claude_kit:commit` | staged 변경사항으로 커밋 메시지 생성 후 커밋 |
-| `/claude_kit:quality` | 포맷 → 린트 → 타입 체크 자동 수정 |
-| `/claude_kit:setup-notifier` | macOS 알림 초기 환경 설정 (최초 1회) |
+| 커맨드                       | 설명                                                  |
+| ---------------------------- | ----------------------------------------------------- |
+| `/claude_kit:setup`          | 기술 스택 인터뷰 → 맞춤형 `.claude/` + CLAUDE.md 생성 |
+| `/claude_kit:start`          | 작업 시작 — 분석 → 계획 → 확인                        |
+| `/claude_kit:done`           | 작업 완료 — 검증 → 커밋 → PR                          |
+| `/claude_kit:commit`         | staged 변경사항으로 커밋 메시지 생성 후 커밋          |
+| `/claude_kit:quality`        | 포맷 → 린트 → 타입 체크 자동 수정                     |
+| `/claude_kit:setup-notifier` | macOS 알림 초기 환경 설정 (최초 1회)                  |
 
 ---
 
@@ -77,20 +75,20 @@ brew install gh && gh auth login
 
 스킬은 키워드를 입력하면 자동으로 트리거됩니다.
 
-| 스킬 | 트리거 | 설명 | 조건 |
-|------|--------|------|------|
-| `commit-helper` | "커밋 메시지 만들어줘" | staged 기반 커밋 메시지 자동 생성 | 항상 |
-| `code-quality` | "린트", "포맷", "타입체크" | 린트·포맷·타입체크 통합 실행 | 항상 |
-| `bug-fix` | "버그", "오류", "에러" | 원인 분석 후 2-3가지 해결 옵션 제시 | 항상 |
-| `refactor` | "리팩토링", "구조 개선" | 정책 보호 테스트 포함 단계별 리팩토링 | 항상 |
-| `test-generator` | "테스트 작성", "커버리지" | 테스트 케이스 생성 + 커버리지 리포트 | 항상 |
-| `pr-review-responder` | "리뷰 반영", PR 번호/URL | 수용/거절/질문 분류 후 자동 반영 | 항상 |
-| `migration-helper` | "업그레이드", "마이그레이션" | 라이브러리 버전 업그레이드 단계적 실행 | 항상 |
-| `docs-creator` | "문서 작성", "CLAUDE.md" | AI 코딩 도구용 문서 작성 | 항상 |
-| `agents-generator` | "루트 지시문 생성" | 프로젝트 분석 후 CLAUDE.md/AGENTS.md 생성 | 항상 |
-| `component-creator` | "컴포넌트 만들어", "페이지 추가" | 프로젝트 패턴 기반 컴포넌트/훅 생성 | React / Next.js |
-| `next-project-structure` | "도메인 추가", "서비스 파일 만들어" | service + query 훅 + view 전체 스캐폴딩 | Next.js |
-| `web-design` | "UI 만들어", "화면 구현" | shadcn/ui 기반 2025 트렌드 UI 구현 | Next.js + TailwindCSS |
+| 스킬                     | 트리거                              | 설명                                      | 조건                  |
+| ------------------------ | ----------------------------------- | ----------------------------------------- | --------------------- |
+| `commit-helper`          | "커밋 메시지 만들어줘"              | staged 기반 커밋 메시지 자동 생성         | 항상                  |
+| `code-quality`           | "린트", "포맷", "타입체크"          | 린트·포맷·타입체크 통합 실행              | 항상                  |
+| `bug-fix`                | "버그", "오류", "에러"              | 원인 분석 후 2-3가지 해결 옵션 제시       | 항상                  |
+| `refactor`               | "리팩토링", "구조 개선"             | 정책 보호 테스트 포함 단계별 리팩토링     | 항상                  |
+| `test-generator`         | "테스트 작성", "커버리지"           | 테스트 케이스 생성 + 커버리지 리포트      | 항상                  |
+| `pr-review-responder`    | "리뷰 반영", PR 번호/URL            | 수용/거절/질문 분류 후 자동 반영          | 항상                  |
+| `migration-helper`       | "업그레이드", "마이그레이션"        | 라이브러리 버전 업그레이드 단계적 실행    | 항상                  |
+| `docs-creator`           | "문서 작성", "CLAUDE.md"            | AI 코딩 도구용 문서 작성                  | 항상                  |
+| `agents-generator`       | "루트 지시문 생성"                  | 프로젝트 분석 후 CLAUDE.md/AGENTS.md 생성 | 항상                  |
+| `component-creator`      | "컴포넌트 만들어", "페이지 추가"    | 프로젝트 패턴 기반 컴포넌트/훅 생성       | React / Next.js       |
+| `next-project-structure` | "도메인 추가", "서비스 파일 만들어" | service + query 훅 + view 전체 스캐폴딩   | Next.js               |
+| `web-design`             | "UI 만들어", "화면 구현"            | shadcn/ui 기반 2025 트렌드 UI 구현        | Next.js + TailwindCSS |
 
 ---
 
@@ -161,12 +159,12 @@ claude_kit/
 `/claude_kit:setup` Q6에서 선택한 서버만 `.mcp.json`에 추가됩니다.
 기존 `.mcp.json`이 있으면 없는 항목만 머지합니다.
 
-| 서버 | 용도 | API 키 필요 |
-|------|------|:-----------:|
-| Figma | 피그마 디자인 파일 읽기 | ✅ |
-| Supabase | DB 쿼리, 마이그레이션, Edge Function | ✅ |
-| Playwright | 브라우저 자동화, E2E 테스트 | ❌ |
-| Atlassian | Jira·Confluence 연동 | ✅ |
+| 서버       | 용도                                 | API 키 필요 |
+| ---------- | ------------------------------------ | :---------: |
+| Figma      | 피그마 디자인 파일 읽기              |     ✅      |
+| Supabase   | DB 쿼리, 마이그레이션, Edge Function |     ✅      |
+| Playwright | 브라우저 자동화, E2E 테스트          |     ❌      |
+| Atlassian  | Jira·Confluence 연동                 |     ✅      |
 
 ---
 
@@ -179,6 +177,7 @@ READ → REACT → ANALYZE → RESTRUCTURE → STRUCTURE → REFLECT
 ```
 
 복잡도에 따라 단계 수 조절:
+
 - **LOW** (1파일, 명확한 수정): READ → REACT
 - **MEDIUM** (2~5파일): READ → ANALYZE → STRUCTURE → REFLECT
 - **HIGH** (5파일+, 새 아키텍처): 전체 6단계 + Plan 에이전트
