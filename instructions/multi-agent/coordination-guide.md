@@ -35,6 +35,8 @@ Task(
 
 ## Agent Teams 우선 원칙
 
+> **참고**: Agent Teams (TeamCreate, SendMessage, TeamDelete)는 Claude Code Max 플랜에서만 사용 가능합니다. 미가용 시 아래 "폴백 모드" 패턴을 사용합니다.
+
 > 일반 플랜에서는 기존 Task 병렬 호출로 자동 폴백
 
 ### 적용 기준
@@ -415,18 +417,7 @@ Task(...) // 실패 → 무시하고 진행
 Task(...) // 성공 → 결과 사용
 ```
 
----
-
----
-
-## TODO: 툴별 가이드 분기 (미완료)
-
-> 현재 `TeamCreate`, `SendMessage` 패턴은 Claude Code 전용이다.
-> Cursor / Codex 사용자에게는 데드코드가 된다.
-
-- [ ] 각 패턴 블록에 `[Claude Code 전용]` 레이블 명시
-- [ ] `## 폴백 모드 (Agent Teams 미가용 시)` 패턴을 범용 기본값으로 재포지셔닝
-- [ ] 툴별 가이드 파일 분기 또는 조건부 섹션 도입 검토
+**상세 복구 절차**: `../workflow-patterns/error-recovery.md`
 
 ---
 
@@ -439,4 +430,5 @@ Task(...) // 성공 → 결과 사용
 | 모델 라우팅        | `./model-routing.md`                  |
 | 팀원 Done 프로세스 | `./teammate-done-process.md`          |
 | 팀 평가 템플릿     | `./team-evaluation.md`                |
+| 에러 복구          | `../workflow-patterns/error-recovery.md` |
 | 금지 패턴          | `../validation/forbidden-patterns.md` |

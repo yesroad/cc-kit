@@ -7,6 +7,8 @@
 </instructions>
 
 <quick_ref>
+> 이 CLAUDE.md는 플러그인 개발용입니다. 설치된 프로젝트에서는 `/claude-kit:start` 형식을 사용합니다.
+
 | 상황 | 참조 |
 |------|------|
 | 작업 시작 | /start |

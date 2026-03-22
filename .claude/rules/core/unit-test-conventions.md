@@ -4,6 +4,17 @@
 
 ---
 
+## 테스트 러너 감지
+
+| 설정 파일 | 러너 | 타이머 API |
+|-----------|------|-----------|
+| `vitest.config.*` 존재 | vitest | `vi.useFakeTimers()` / `vi.useRealTimers()` |
+| `jest.config.*` 존재 | jest | `jest.useFakeTimers()` / `jest.useRealTimers()` |
+
+> 아래 예시는 jest 기준이며, vitest 프로젝트에서는 `jest` → `vi`로 치환합니다.
+
+---
+
 ## 적용 대상
 
 - `utils/`, `helpers/`, `lib/`, `adapters/` 내 순수 함수

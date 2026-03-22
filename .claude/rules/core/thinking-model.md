@@ -28,7 +28,8 @@ READ → REACT → ANALYZE → RESTRUCTURE → STRUCTURE → REFLECT
 > **SSOT**: 복잡도 판단 기준과 단계별 예시는 아래 파일을 참조한다.
 > `@../../instructions/workflow-patterns/sequential-thinking.md`
 
-복잡도(LOW / MEDIUM / HIGH)에 따라 적용할 사고 단계 수가 달라진다.
+복잡도(LOW / MEDIUM / HIGH)에 따라 적용할 **인지(cognitive) 단계** 수가 달라진다.
+에이전트 실행(operational) 단계는 `execution-patterns.md`를 참조한다.
 판단 기준, 에이전트 연계, 병렬 실행 패턴은 sequential-thinking.md를 단일 기준으로 사용한다.
 
 ---

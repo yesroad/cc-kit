@@ -60,14 +60,14 @@ brew install gh && gh auth login
 
 ## 커맨드
 
-| 커맨드                       | 설명                                                  |
-| ---------------------------- | ----------------------------------------------------- |
-| `/claude-kit:setup`          | 기술 스택 인터뷰 → 맞춤형 `.claude/` + CLAUDE.md 생성 |
-| `/claude-kit:start`          | 작업 시작 — 분석 → 계획 → 확인                        |
-| `/claude-kit:done`           | 작업 완료 — 검증 → 커밋 → PR                          |
-| `/claude-kit:commit`         | staged 변경사항으로 커밋 메시지 생성 후 커밋          |
-| `/claude-kit:quality`        | 포맷 → 린트 → 타입 체크 자동 수정                     |
-| `/claude-kit:setup-notifier` | macOS 알림 초기 환경 설정 (최초 1회)                  |
+| 커맨드            | 설명                                                  |
+| ----------------- | ----------------------------------------------------- |
+| `/setup`          | 기술 스택 인터뷰 → 맞춤형 `.claude/` + CLAUDE.md 생성 |
+| `/start`          | 작업 시작 — 분석 → 계획 → 확인                        |
+| `/done`           | 작업 완료 — 검증 → 커밋 → PR                          |
+| `/commit`         | staged 변경사항으로 커밋 메시지 생성 후 커밋          |
+| `/quality`        | 포맷 → 린트 → 타입 체크 자동 수정                     |
+| `/setup-notifier` | macOS 알림 초기 환경 설정 (최초 1회)                  |
 
 ---
 
@@ -106,7 +106,8 @@ claude-kit/
 │   ├── unit-test-conventions.md    # 순수 함수 유닛 테스트 규칙
 │   ├── accessibility.md            # WCAG 2.1 AA 접근성 규칙
 │   ├── pr-guide.md                 # PR 작성 가이드
-│   └── policy-definitions.md       # 정책(Policy) 정의 기준
+│   ├── policy-definitions.md       # 정책(Policy) 정의 기준
+│   └── vue-conventions.md          # Vue 3 + Composition API 컨벤션
 │
 ├── agents/                     # 전문화된 서브에이전트
 │   ├── explore.md                  # 코드베이스 탐색
@@ -143,9 +144,12 @@ claude-kit/
 │   └── workflow-patterns/      # 복잡도별 작업 단계
 │
 ├── hooks/
-│   └── notify.sh               # macOS 알림 훅
+│   ├── notify.sh               # 크로스 플랫폼 알림 훅
+│   └── hooks.json              # 훅 이벤트 설정
 │
-
+├── scripts/
+│   └── install-notifier.sh     # 알림 의존성 설치 스크립트
+│
 ├── .mcp.json                   # MCP 서버 설정 템플릿
 └── .claude-plugin/
     ├── plugin.json             # 플러그인 메타데이터
@@ -156,7 +160,7 @@ claude-kit/
 
 ## MCP 서버 템플릿
 
-`/claude-kit:setup` Q6에서 선택한 서버만 `.mcp.json`에 추가됩니다.
+`/setup` Q6에서 선택한 서버만 `.mcp.json`에 추가됩니다.
 기존 `.mcp.json`이 있으면 없는 항목만 머지합니다.
 
 | 서버       | 용도                                 | API 키 필요 |
@@ -187,16 +191,16 @@ READ → REACT → ANALYZE → RESTRUCTURE → STRUCTURE → REFLECT
 ## 전형적인 개발 사이클
 
 ```
-/claude-kit:setup       → 최초 1회: 기술 스택 설정
-/claude-kit:start       → 작업 시작: 분석 + 계획
+/setup       → 최초 1회: 기술 스택 설정
+/start       → 작업 시작: 분석 + 계획
   ↓ 구현
 component-creator       → 컴포넌트/훅 생성
 bug-fix                 → 버그 분석 + 해결 옵션
 refactor                → 구조 개선
 test-generator          → 테스트 작성
   ↓
-/claude-kit:quality     → 포맷 → 린트 → 타입 체크
-/claude-kit:done        → 검증 → 커밋 → PR
+/quality     → 포맷 → 린트 → 타입 체크
+/done        → 검증 → 커밋 → PR
   ↓ 리뷰 후
 pr-review-responder     → 리뷰 코멘트 반영
 ```
