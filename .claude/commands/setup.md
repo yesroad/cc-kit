@@ -21,9 +21,9 @@ ls pages/ src/pages/ 2>/dev/null | head -1 || true
 ls tailwind.config.* 2>/dev/null || true
 ```
 
-감지 결과를 기반으로 아래 매핑표에 따라 각 질문의 `(추천)` 항목을 결정합니다:
+감지 결과를 아래 매핑표에 따라 자동 확정합니다:
 
-| 감지 조건 | 추천 항목 |
+| 감지 조건 | 자동 확정 |
 |-----------|-----------|
 | `dependencies`에 `next` 있음 | Q1 → Next.js |
 | `dependencies`에 `react` 있음 (next 없음) | Q1 → React |
@@ -37,15 +37,35 @@ ls tailwind.config.* 2>/dev/null || true
 | `dependencies`에 `jotai` 있음 | Q5 → Jotai |
 | `dependencies`에 `zustand` 있음 | Q5 → Zustand |
 | `dependencies`에 `@reduxjs/toolkit` 있음 | Q5 → Redux Toolkit |
-
-감지된 항목이 없으면 `(추천)` 없이 질문합니다.
+| `dependencies`에 `zod` 있음 | Q6 → Zod |
+| `dependencies`에 `yup` 있음 | Q6 → Yup |
 
 ---
 
 ## 1단계: 프로젝트 기술 스택 인터뷰
 
-아래 질문을 순서대로 물어보세요. 답변을 모두 받은 후 설치를 진행합니다.
-0단계에서 감지된 항목은 해당 번호 옆에 `(추천)` 을 표시합니다.
+### 감지 결과 확인 → 미감지만 질문
+
+0단계 감지 결과가 있으면 사용자에게 확인을 받는다.
+
+**진행 방식:**
+
+1. 감지 결과를 요약하여 보여준다:
+   ```
+   📋 감지된 기술 스택:
+   - 프레임워크: Next.js (App Router)
+   - 스타일링: TailwindCSS
+   - 서버 상태: TanStack Query
+   - 전역 상태: Jotai
+   - 폼 검증: Zod
+
+   이대로 진행할까요? (Y/n)
+   ```
+2. `Y` 또는 엔터 → 감지 항목 확정, **미감지 항목만 질문**
+3. `n` → 감지 결과 무시, **모든 질문을 처음부터 순서대로 진행**
+4. 감지된 항목이 하나도 없으면 → 모든 질문을 순서대로 진행
+
+아래는 **미감지 시 질문할 내용**입니다:
 
 ---
 
@@ -90,7 +110,15 @@ ls tailwind.config.* 2>/dev/null || true
 
 ---
 
-**Q6. MCP 서버** (복수 선택 가능)
+**Q6. 폼 검증 라이브러리**
+
+1. Zod
+2. Yup
+3. 없음
+
+---
+
+**Q7. MCP 서버** (복수 선택 가능)
 
 | 번호 | 서버       | 용도                                               |
 | ---- | ---------- | -------------------------------------------------- |
@@ -103,15 +131,17 @@ ls tailwind.config.* 2>/dev/null || true
 
 예시: "1 3" → Figma + Playwright 설치
 
+> **참고**: Q6 이전 → Q7로 번호 변경됨
+
 ---
 
 ## 2단계: 파일 설치
 
 답변을 받은 후 아래 스크립트를 실행합니다.
 
-Q6 답변을 기반으로 스크립트 실행 전에 `SELECTED_MCP` 변수를 설정합니다:
+Q7 답변을 기반으로 스크립트 실행 전에 `SELECTED_MCP` 변수를 설정합니다:
 
-| Q6 선택         | SELECTED_MCP 값         |
+| Q7 선택         | SELECTED_MCP 값         |
 | --------------- | ----------------------- |
 | 1 (Figma)       | `Figma`                 |
 | 2 (Supabase)    | `supabase`              |
@@ -149,7 +179,7 @@ done
 [ -f ".claude/hooks/notify.sh" ] && chmod +x .claude/hooks/notify.sh
 
 # .mcp.json: Q6 선택 서버만 추가 (없으면 새로 생성, 있으면 선택 항목만 머지)
-# SELECTED_MCP: Q6 답변 기반으로 Claude가 설정 — 쉼표 구분 서버 키 목록
+# SELECTED_MCP: Q7 답변 기반으로 Claude가 설정 — 쉼표 구분 서버 키 목록
 # 예) SELECTED_MCP="Figma,playwright" 또는 SELECTED_MCP="" (없음)
 # 서버 키 매핑: 1=Figma, 2=supabase, 3=playwright, 4=Atlassian
 if [ -n "$SELECTED_MCP" ] && [ -f "$PLUGIN_ROOT/.mcp.json" ]; then
@@ -271,6 +301,7 @@ echo "✅ .claude/ 설치 완료"
 | `nextjs-app-router.md`        | Q1 = Next.js **AND** Q2 = App Router |
 | `state-and-server-state.md`   | Q4 = TanStack Query 또는 SWR         |
 | `accessibility.md`            | Q1 = Next.js 또는 React              |
+| `validation-patterns.md`      | Q6 = Zod                              |
 
 > **Q1 = 기타**: `thinking-model.md`, `required-behaviors.md`, `forbidden-patterns.md`, `unit-test-conventions.md`, `pr-guide.md`, `policy-definitions.md`만 포함. 프론트엔드 전용 rules (`coding-standards.md`, `react-*`, `nextjs-*`, `state-*`, `accessibility.md`)는 제외.
 
