@@ -6,31 +6,17 @@ Claude Code 확장 플러그인 — rules, agents, skills, commands를 포함한
 
 ## 설치
 
-### 1. 레포 클론
-
-```bash
-git clone https://github.com/yesroad/cc-kit
-```
-
-### 2. 프로젝트에 복사
-
-적용할 프로젝트 루트에서 실행합니다:
-
-```bash
-CLAUDE_KIT=/path/to/cc-kit
-
-mkdir -p .claude
-cp -r $CLAUDE_KIT/rules      ./.claude/rules
-cp -r $CLAUDE_KIT/agents     ./.claude/agents
-cp -r $CLAUDE_KIT/skills     ./.claude/skills
-cp -r $CLAUDE_KIT/commands   ./.claude/commands
-cp -r $CLAUDE_KIT/hooks      ./.claude/hooks
-cp    $CLAUDE_KIT/.mcp.json  ./.mcp.json
-```
-
-### 3. 프로젝트 설정
+### 1. 플러그인 설치
 
 Claude Code에서 실행합니다:
+
+```
+/plugins install yesroad/cc-kit
+```
+
+### 2. 프로젝트 설정
+
+설치 완료 후 Claude Code에서 실행합니다:
 
 ```
 /setup
@@ -159,9 +145,8 @@ cc-kit/
 │   └── install-notifier.sh     # 알림 의존성 설치 스크립트
 │
 ├── .mcp.json                   # MCP 서버 설정 템플릿
-└── .claude-plugin/
-    ├── plugin.json             # 플러그인 메타데이터
-    └── marketplace.json        # 마켓플레이스 등록 정보
+├── plugin.json                 # 플러그인 메타데이터
+└── marketplace.json            # 마켓플레이스 등록 정보
 ```
 
 ---
