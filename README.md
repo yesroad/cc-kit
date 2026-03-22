@@ -17,7 +17,7 @@ Claude Code에서 실행합니다:
 ### 2. 플러그인 설치
 
 ```
-/plugin install cc-kit@yesroad-cc-kit
+/plugin install cc-kit@yesroad
 ```
 
 ### 3. 프로젝트 설정
